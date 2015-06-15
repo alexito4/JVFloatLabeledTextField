@@ -192,7 +192,7 @@ static CGFloat const kFloatingLabelHideAnimationDuration = 0.3f;
         }
     }
     
-    _floatingLabel.frame = CGRectMake(originX + _floatingLabelXPadding, _floatingLabel.frame.origin.y,
+    _floatingLabel.frame = CGRectMake(originX + _floatingLabelXPadding - _placeholderXPadding, _floatingLabel.frame.origin.y,
                                       _floatingLabel.frame.size.width, _floatingLabel.frame.size.height);
 }
 
@@ -257,14 +257,21 @@ static CGFloat const kFloatingLabelHideAnimationDuration = 0.3f;
     CGRect rect = [super editingRectForBounds:bounds];
     if ([self.text length] || self.keepBaseline) {
         rect = [self insetRectForBounds:rect];
+    } else {
+        rect = [self overwrittedRectForBounds:rect];
     }
     return CGRectIntegral(rect);
+}
+
+// Frame used for the placeholder.
+- (CGRect)overwrittedRectForBounds:(CGRect)rect {
+    return CGRectMake(rect.origin.x + _placeholderXPadding, rect.origin.y, rect.size.width - _placeholderXPadding, rect.size.height);
 }
 
 - (CGRect)insetRectForBounds:(CGRect)rect {
     CGFloat topInset = ceilf(_floatingLabel.bounds.size.height + _placeholderYPadding);
     topInset = MIN(topInset, [self maxTopInset]);
-    return CGRectMake(rect.origin.x, rect.origin.y + topInset / 2.0f, rect.size.width, rect.size.height);
+    return CGRectMake(rect.origin.x + _placeholderXPadding, rect.origin.y + topInset / 2.0f, rect.size.width - _placeholderXPadding, rect.size.height);
 }
 
 - (CGRect)clearButtonRectForBounds:(CGRect)bounds
@@ -303,7 +310,7 @@ static CGFloat const kFloatingLabelHideAnimationDuration = 0.3f;
     
     CGSize floatingLabelSize = [_floatingLabel sizeThatFits:_floatingLabel.superview.bounds.size];
     
-    _floatingLabel.frame = CGRectMake(_floatingLabel.frame.origin.x,
+    _floatingLabel.frame = CGRectMake(_placeholderXPadding + _floatingLabelXPadding,
                                       _floatingLabel.frame.origin.y,
                                       floatingLabelSize.width,
                                       floatingLabelSize.height);
