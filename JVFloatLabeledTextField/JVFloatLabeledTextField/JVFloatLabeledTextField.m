@@ -248,6 +248,8 @@ static CGFloat const kFloatingLabelHideAnimationDuration = 0.3f;
     CGRect rect = [super textRectForBounds:bounds];
     if ([self.text length] || self.keepBaseline) {
         rect = [self insetRectForBounds:rect];
+    } else {
+        rect = [self overwrittedRectForBounds:rect];
     }
     return CGRectIntegral(rect);
 }
