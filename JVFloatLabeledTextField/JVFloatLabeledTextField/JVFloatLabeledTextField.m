@@ -273,7 +273,8 @@ static CGFloat const kFloatingLabelHideAnimationDuration = 0.3f;
 - (CGRect)insetRectForBounds:(CGRect)rect {
     CGFloat topInset = ceilf(_floatingLabel.bounds.size.height + _placeholderYPadding);
     topInset = MIN(topInset, [self maxTopInset]);
-    return CGRectMake(rect.origin.x + _placeholderXPadding, rect.origin.y + topInset / 2.0f, rect.size.width - _placeholderXPadding, rect.size.height);
+    CGFloat rightViewInset = CGRectGetWidth([self rightViewRectForBounds:rect]) + 4.0f; // inset by the right view
+    return CGRectMake(rect.origin.x + _placeholderXPadding, rect.origin.y + topInset / 2.0f, rect.size.width - _placeholderXPadding - rightViewInset, rect.size.height);
 }
 
 - (CGRect)clearButtonRectForBounds:(CGRect)bounds
@@ -287,6 +288,13 @@ static CGFloat const kFloatingLabelHideAnimationDuration = 0.3f;
         }
     }
     return CGRectIntegral(rect);
+}
+
+- (CGRect)rightViewRectForBounds:(CGRect)bounds
+{
+    CGRect rect = [super rightViewRectForBounds:bounds];
+    rect = CGRectMake(rect.origin.x - _placeholderXPadding, rect.origin.y, rect.size.width, rect.size.height);
+    return rect;
 }
 
 - (CGFloat)maxTopInset
